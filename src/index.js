@@ -4,9 +4,26 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import Auth from './Auth';
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
+const auth = new Auth();
+
+let state = {}; // Globle state
+window.setState = (changes) => {    // This will track our all the changes of this application.
+    state = Object.assign( {}, state, changes);
+    ReactDOM.render(<App {...state} />, document.getElementById('root')); // This will rerender everytime that application make changes. Passing all the properties by using spred (...) operator.
+}
+
+/*eslint no-restricted-globals: ["off", "location"]*/
+
+let username = auth.getProfile().given_name || 'Madushan Perera'
+
+let initialState = {
+    name : username,
+    location : location.pathname.replace(/^\/?|\/$/g,''),  // Routing
+    auth
+};
+
+window.setState(initialState); // Starting the application by using.
+
 serviceWorker.unregister();
